@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block styles %}
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% from "_macros.html" import camposNuevos %}
+
+    <div class="container">
+        <div class="row">
+            <form name="sent" action="/index" method="POST" id="contactForm">
+                <div class="row g-4">
+                    <h1>DOXING FORM</h1>
+                    <div class="col-md-3">
+                        {{ camposNuevos(form.nombre, class='form-control') }}
+                    </div>
+            
+                    <div class="col-md-3">
+                        {{ camposNuevos(form.direccion, class='form-control') }}
+                    </div>
+            
+                    <div class="col-md-3">
+                        {{ camposNuevos(form.telefono, class='form-control') }}
+                    </div>
+            
+                    <div class="col-md-3">
+                        {{ camposNuevos(form.correo, class='form-control') }}
+                    </div>
+
+                    <div class="col-md-3">
+                        {{ camposNuevos(form.sueldo, class='form-control') }}
+                    </div>
+                </div><br/>
+                
+                <div class="col-12">
+                    <button type="submit" class="btn btn-success" name="signup" id="send-sign-up" value="registrar">
+                        Registrar
+                    </button>
+                </div>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            </form>
+        </div>
+    </div>
+{% endblock %}
