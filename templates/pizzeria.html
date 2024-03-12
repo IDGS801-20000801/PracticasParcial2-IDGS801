@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    {% from "_macros.html" import render_field %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <h3 class="text-center" style="font-family: 'Open Sans', sans-serif;">Pedidos, Pizza la +</h3>
+                <div class="card">
+                    <div >
+                        <a href="pedidos" class="btn btn-outline-success btn-lg btn-block">Nuevo Pedido</a>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title" style="font-family: 'Open Sans', sans-serif;">Obten tus ventas por la fecha pedida</h4>
+                        <form method="GET" action="/pizzeria" class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ 
+                                            render_field
+                                            (
+                                                form.dia, class="form-control"
+                                            ) 
+                                        }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ 
+                                            render_field
+                                            (
+                                                form.mes, class="form-control"
+                                            ) 
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-outline-info">Filtrar</button>
+                                    <button type="button" class="btn btn-outline-dark" onclick="window.location.href='/pizzeria'">Limpiar</button>
+                                </div>
+                            </div>
+                        </form>
+                        <hr>
+                        <h5 style="font-family: 'Open Sans', sans-serif;">
+                            Ventas {{ filtro }}
+                        </h5>
+                        <b><h2 style="font-family: 'Open Sans', sans-serif;">
+                            Total: ${{ ventas }}
+                        </h2></b>
+                        <hr>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Fecha Pedido</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ped in pedidos %}
+                                    {% if not fecha_filtro or ped.fechaCompra == fecha_obj %}
+                                        {% if not mes_filtro or (ped.fechaCompra.year == mes_obj.year and ped.fechaCompra.month == mes_obj.month) %}
+                                            <tr>
+                                                <td>{{ ped.nombreCliente }}</td>                                                <td>{{ ped.fechaCompra }}</td>
+                                                <td>${{ ped.totalCompra }}</td>
+                                                <td><a href="pedidos?id={{ ped.id_pedido }}" class="btn btn-warning">Detalle</a></td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+{% endblock %}

@@ -1,0 +1,372 @@
+{% extends 'layout.html' %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    .pizzeria-container {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 50px;
+    }
+
+    .pizzeria-well {
+        background-color: #fff;
+        border: 2px solid #17a2b8;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .pizzeria-heading {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #17a2b8;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        border-radius: 5px;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .btn-info:hover {
+        background-color: #117a8b;
+        border-color: #117a8b;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #218838;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 0;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+    }
+
+    #tblPizzas tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    #registrar {
+        background-color: #28a745;
+        border-color: #28a745;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    #registrar:hover {
+        background-color: #218838;
+        border-color: #218838;
+    }
+
+    .footer {
+        margin-top: 20px; /* Espacio entre el contenido y el footer */
+        text-align: center;
+        padding: 20px;
+        background-color: #343a40;
+        color: white;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        opacity: 0.9;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .footer p {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% from "_macros.html" import render_field %}
+
+<div class="container pizzeria-container">
+    <form class="form-inline" name="registro" action="/pedidos" id="registro" method="POST">
+        <div class="well pizzeria-well">
+            <h1 class="pizzeria-heading" style="font-family: 'Open Sans', sans-serif;">Bienvenida(o) a Pizzería La +</h1>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ 
+                            render_field
+                            (
+                                form.nombreCliente, class="form-control"
+                            ) 
+                        }}
+                    </div>
+                    <div class="form-group">
+                        {{ 
+                            render_field
+                            (
+                                form.direccionEnvio, class="form-control"
+                            ) 
+                        }}
+                    </div>
+                    <div class="form-group">
+                        {{ 
+                            render_field
+                            (
+                                form.telefono, class="form-control"
+                            ) 
+                        }}
+                    </div>
+                    <div class="form-group">
+                        {{ 
+                            render_field
+                            (
+                                form.fechaPedido, class="form-control"
+                            ) 
+                        }}
+                    </div>
+                    <div class="form-group">
+                        {{ 
+                            render_field
+                            (
+                                form.total, class="form-control"
+                            ) 
+                        }}
+                    </div>
+                    <div class="form-group" style="display: none;">
+                        {{ 
+                            render_field
+                            (
+                                form.pizzas, class="form-control"
+                            ) 
+                        }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ 
+                            render_field
+                            (
+                                form.tamanioPizza, class="form-control"
+                            ) 
+                        }}
+                    </div>
+                    <div class="form-group">
+                        {{ 
+                            render_field
+                            (
+                                form.pina, class=""
+                            ) 
+                        }}
+                    </div>
+                    <div class="form-group">
+                        {{ 
+                            render_field
+                            (
+                                form.jamon, class=""
+                            ) 
+                        }}
+                    </div>
+                    <div class="form-group">
+                        {{ 
+                            render_field
+                            (
+                                form.champin, class=""
+                            ) 
+                        }}
+                    </div>
+                    <div class="form-group">
+                        {{ 
+                            render_field
+                            (
+                                form.numPizzas, class="form-control"
+                            ) 
+                        }}
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" class="btn btn-info" id="btnAddPizza" onclick="addPizza();">Agregar
+                            Pizza</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="well pizzeria-well">
+            <h1 class="pizzeria-heading" style="font-family: 'Open Sans', sans-serif;">Comanda</h1>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tamaño</th>
+                                <th>Ingredientes</th>
+                                <th>Cantidad</th>
+                                <th>Subtotal</th>
+                                <th>Detalle</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblPizzas">
+                        </tbody>
+                    </table>
+                </div>
+                <button type="submit" class="btn btn-success" id="registrar" name="registrar">Registrar Pedido</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        </div><br/><br/>
+        <div class="footer">
+        </div>
+    </form>
+</div>
+
+{% block scripts %}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    let pizzas = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        pizzas = document.getElementById('pizzas').value ? JSON.parse(document.getElementById('pizzas').value) : [];
+        if (pizzas.length === 0) {
+            document.getElementById('fechaPedido').value = new Date().toISOString().split('T')[0];
+        }
+        loadPizzas();
+    });
+
+    document.getElementById('registro').addEventListener('submit', (e) => {
+
+        e.preventDefault();
+        
+        Swal.fire({
+            title: '¡ Atención !',
+            text: 'El pedido está siendo procesado, aún puedes cambiar de opinión.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4CAF50',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Registrar',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+                title: 'swal-title',
+                content: 'swal-text',
+                confirmButton: 'swal-confirm-button',
+                cancelButton: 'swal-cancel-button'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: '¡ Registrado !',
+                    text: 'Pedido enviado exitosamente',
+                    icon: 'success',
+                    customClass: {
+                        title: 'swal-title',
+                        content: 'swal-text',
+                        confirmButton: 'swal-confirm-button'
+                    }
+                });
+                document.getElementById('registro').submit();
+            }
+        });        
+    });
+
+    function addPizza() {
+        const tamanio = document.querySelector('input[name="tamanioPizza"]:checked').value;
+
+        const checkboxes = ['pina', 'jamon', 'champin'];
+        const ingredientes = checkboxes.filter(checkbox => document.getElementById(checkbox).checked);
+
+        const numPizzas = document.getElementById('numPizzas').value;
+        const subtotal = calculateSubtotal(tamanio, ingredientes) * numPizzas;
+
+        const pizza = {
+            tamanio,
+            ingredientes,
+            numPizzas,
+            subtotal
+        };
+
+        pizzas.push(pizza);
+        calcularTotal();
+        document.getElementById('pizzas').value = JSON.stringify(pizzas);
+        loadPizzas();
+    }
+
+    function calculateSubtotal(tamanio, ingredientes) {
+        let subtotal = 0;
+
+        switch (tamanio) {
+            case 'Chica':
+                subtotal += 40;
+                break;
+            case 'Mediana':
+                subtotal += 80;
+                break;
+            case 'Grande':
+                subtotal += 120;
+                break;
+        }
+
+        subtotal += ingredientes.length * 10;
+        return subtotal;
+    }
+
+    function loadPizzas() {
+        const tabla = document.getElementById('tblPizzas');
+        tabla.innerHTML = '';
+
+        pizzas.forEach(pizza => {
+            const row = tabla.insertRow();
+
+            row.insertCell(0).textContent = pizza.tamanio;
+            row.insertCell(1).textContent = pizza.ingredientes;
+            row.insertCell(2).textContent = pizza.numPizzas;
+            row.insertCell(3).textContent = pizza.subtotal;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Eliminar';
+            deleteButton.className = 'btn btn-danger';
+            deleteButton.addEventListener('click', () => {
+                eliminarPizza(pizza);
+                calcularTotal();
+                document.getElementById('pizzas').value = JSON.stringify(pizzas);
+            });
+            row.insertCell(4).appendChild(deleteButton);
+        });
+    }
+
+    function eliminarPizza(pizza) {
+        const index = pizzas.indexOf(pizza);
+        if (index !== -1) {
+            pizzas.splice(index, 1);
+            loadPizzas();
+        }
+    }
+
+    function calcularTotal() {
+        const total = pizzas.reduce((acc, pizza) => acc + pizza.subtotal, 0);
+        document.getElementById('total').value = total;
+    }
+
+</script>
+{% endblock %}
+{% endblock %}
